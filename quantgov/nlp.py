@@ -142,6 +142,57 @@ class OccurrenceCounter():
 commands['count_occurrences'] = OccurrenceCounter
 
 
+class AdvancedOccurrenceCounter():
+
+    cli = utils.CLISpec(
+        help="Advanced Term Counter for Specific Words",
+        arguments=[
+            utils.CLIArg(
+                flags=('patterns'),
+                kwargs={
+                    'help': 'list of regex patterns to be found',
+                    'nargs': '+'
+                }
+            ),
+            utils.CLIArg(
+                flags=('--total_label'),
+                kwargs={
+                    'metavar': 'LABEL',
+                    'help': (
+                        'output a column with sum of occurrences of all terms'
+                        ' with column name LABEL'
+                    ),
+                }
+            )
+        ]
+    )
+
+    @staticmethod
+    def get_columns(args):
+        if args['total_label'] is not None:
+            return tuple(args['terms']) + (args['total_label'],)
+        return tuple(args['terms'])
+
+    @staticmethod
+    def process_document(doc, patterns, total_label):
+        text = ' '.join(doc.text.split()).lower()
+        term_counts = collections.Counter()
+        for pattern in patterns:
+            term_counts.update(collections.Counter(
+                i for i in pattern.findall(text)))
+        terms = term_counts.keys()
+        if total_label is not None:
+            return (
+                doc.index
+                + tuple(term_counts[i] for i in terms)
+                + (sum(term_counts.values()),)
+            )
+        return (doc.index + tuple(term_counts[i] for i in terms))
+
+
+commands['count_occurrences_advanced'] = AdvancedOccurrenceCounter
+
+
 class ShannonEntropy():
     lemmas = {}
     cli = utils.CLISpec(
