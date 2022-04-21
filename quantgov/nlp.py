@@ -392,3 +392,36 @@ class TextStandard():
 
 
 commands['text_standard'] = TextStandard
+
+
+# User-Created Classes #
+
+# this class is a modification of class ConditionalCounter()
+# last revised 2022-03-15 by Mark Febrizio
+class DistributionalPhraseCounter():
+    cli = utils.CLISpec(
+        help=('User-created class based on `count_occurrences`. Count words and phrases related to distributional analysis or equity considerations.'),
+        arguments=[]
+    )
+    pattern = re.compile(r'''
+            \b((?<!private\s)(?:in)?equit[\w]+|(?:in)?equality
+            |distributional|distributive|dignity|minorities|minority[-\s]+owned\s+(?:business|businesses)
+            |distribution(?=\s+of\s+(?:net|social|societal|safety|health)?[-\s]?(?:benefit[s]?|cost[s]?|impact[s]?|effect[s]?|burden[s]?|consequence[s]?|income[s]?|wealth|wages|risk[s]?))
+            |(?:benefit[s]?|cost[s]?|impact[s]?|effect[s]?|burden[s]?|consequence[s]?|income[s]?|wealth|wages|risk[s]?)(?:\s+\w+\s*\w*\s*\w*)?\s+(?:distribut|apportion|allocat|divid)\w+\s+(?:across|among|to)
+            |(?:environmental|racial|social|societal|systemic|systematic)\s+(?:in)?justice
+            |(?:low(?:er)?[-\s]?income|marginalized|minority|vulnerable|disadvantaged)\s+(?:group[s]?|household[s]?|family|families|[\w]*[-]?population[s]?|people|persons|community|communities|individual[s]?)
+            |(?:incommensurate|uneven|inequal|unequal|disparate|systemic|disproportionate)\s+(?:net|social|societal|safety|health)?[-\s]?(?:effect[s]?|impact[s]?|benefit[s]?|cost[s]?|burden[s]?|[\w]*advantag[\w]+|harm[s]?|consequence[s]?|risk[s]?)
+            |disproportionately\s+(?:[\w]*advantag[\w]+|affect[\w]*|harm[\w]*|burden[\w]*|risk[\w]*))\b
+    ''', re.IGNORECASE | re.VERBOSE)
+
+    @staticmethod
+    def get_columns(args):
+        return ('distributional_phrases',)
+
+    @staticmethod
+    def process_document(doc):
+        return doc.index + (len(DistributionalPhraseCounter.pattern.findall(
+                                ' '.join((doc.text).splitlines()))),)
+
+
+commands['count_distributional_phrases'] = DistributionalPhraseCounter
