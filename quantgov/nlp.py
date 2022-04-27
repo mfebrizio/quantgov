@@ -397,19 +397,19 @@ commands['text_standard'] = TextStandard
 # User-Created Classes #
 
 # this class is a modification of class ConditionalCounter()
-# last revised 2022-03-15 by Mark Febrizio
+# last revised 2022-04-27 by Mark Febrizio
 class DistributionalPhraseCounter():
     cli = utils.CLISpec(
-        help=('User-created class based on `count_occurrences`. Count words and phrases related to distributional analysis or equity considerations.'),
+        help=('User-created command based on `count_conditionals`. Count words and phrases related to distributional analysis or equity considerations.'),
         arguments=[]
     )
     pattern = re.compile(r'''
-            \b((?<!private\s)(?:in)?equit[\w]+|(?:in)?equality
+            \b((?:in)?equitable|(?:in)?equality|inequit[\w]+
             |distributional|distributive|dignity|minorities|minority[-\s]+owned\s+(?:business|businesses)
             |distribution(?=\s+of\s+(?:net|social|societal|safety|health)?[-\s]?(?:benefit[s]?|cost[s]?|impact[s]?|effect[s]?|burden[s]?|consequence[s]?|income[s]?|wealth|wages|risk[s]?))
             |(?:benefit[s]?|cost[s]?|impact[s]?|effect[s]?|burden[s]?|consequence[s]?|income[s]?|wealth|wages|risk[s]?)(?:\s+\w+\s*\w*\s*\w*)?\s+(?:distribut|apportion|allocat|divid)\w+\s+(?:across|among|to)
-            |(?:environmental|racial|social|societal|systemic|systematic)\s+(?:in)?justice
-            |(?:low(?:er)?[-\s]?income|marginalized|minority|vulnerable|disadvantaged)\s+(?:group[s]?|household[s]?|family|families|[\w]*[-]?population[s]?|people|persons|community|communities|individual[s]?)
+            |(?:environmental|racial|social|societal|systemic|systematic|health|economic)\s+(?:(?:in)?justice|disparities|(?:in)?equit[\w]+)
+            |(?:low(?:er)?[-\s]?income|marginalized|minority|vulnerable|disadvantaged|underserved|underrepresented)\s+(?:group[s]?|household[s]?|family|families|[\w]*[-]?population[s]?|people|persons|community|communities|individual[s]?)
             |(?:incommensurate|uneven|inequal|unequal|disparate|systemic|disproportionate)\s+(?:net|social|societal|safety|health)?[-\s]?(?:effect[s]?|impact[s]?|benefit[s]?|cost[s]?|burden[s]?|[\w]*advantag[\w]+|harm[s]?|consequence[s]?|risk[s]?)
             |disproportionately\s+(?:[\w]*advantag[\w]+|affect[\w]*|harm[\w]*|burden[\w]*|risk[\w]*))\b
     ''', re.IGNORECASE | re.VERBOSE)
